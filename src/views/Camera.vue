@@ -30,7 +30,7 @@
       <div class="row justify-center q-ma-md">
         Location
         <input
-          v-model="post.location"
+          v-model="locationStr"
           class="col col-sm-6"
           label="Location"
           dense
@@ -43,7 +43,7 @@
       </div>
     </div>
   </div>
-  <Mapclick></Mapclick>
+  <Mapclick @coords='getCoords'></Mapclick>
   </div>
 </template>
 
@@ -58,6 +58,7 @@ export default {
   components: { Navbar, Mapclick},
   data() {
     return {
+      locationStr :"",
       camera_caption : "Take Photo",
       post: {
         id: 1,
@@ -72,6 +73,10 @@ export default {
     };
   },
   methods: {
+    getCoords(e){
+      console.log("coords gotten", e)
+      this.locationStr = `${e.lat} ${e.lng}`
+    },
     initCamera() {
       navigator.mediaDevices
         .getUserMedia({
