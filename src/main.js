@@ -13,7 +13,9 @@ projectAuth.onAuthStateChanged(() =>{
         app = true
         app = createApp(App)
     .use(router)
+   
     .mount('#app')
 
     }
 })
+

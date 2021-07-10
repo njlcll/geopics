@@ -43,16 +43,19 @@
       </div>
     </div>
   </div>
+  <Mapclick></Mapclick>
   </div>
 </template>
 
 <script>
 //import { uid } from 'quasar'
 //require('md-gum-polyfill')
-import Navbar from '../components/Navbar.vue'
+import Navbar from '../components/Navbar'
+import Mapclick from '../components/MapClick'
+
 export default {
   name: "Camera",
-  components: { Navbar},
+  components: { Navbar, Mapclick},
   data() {
     return {
       camera_caption : "Take Photo",
@@ -151,13 +154,13 @@ export default {
   },
   mounted() {
     this.initCamera();
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.post.location = position.coords.latitude;
-      console.log(position.coords.latitude);
-    }),
-      (err) => {
-        console.log(err), { timeout: 7000 };
-      };
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //   this.post.location = position.coords.latitude;
+    //   console.log(position.coords.latitude);
+    // }),
+    //   (err) => {
+    //     console.log(err), { timeout: 7000 };
+    //   };
   },
   beforeDestroy() {
     if (this.hasCameraSupport) {
