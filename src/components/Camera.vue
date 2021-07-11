@@ -25,9 +25,9 @@
 <script>
 import { ref } from "vue";
 import { onMounted, onBeforeUnmount } from "vue";
-import  useStorage from '../composables/useStorage'
+
 export default {
-  setup() {
+  setup(props, context) {
     const camera_caption = ref("Take Photo");
     const post = {
       id: 1,
@@ -42,7 +42,7 @@ export default {
     const myVideo = ref(null);
     const canvas = ref(null);
 
-    const {url, filePath, error, upLoadImage } = useStorage()
+    
 
     const initCamera = () => {
       navigator.mediaDevices
@@ -58,10 +58,15 @@ export default {
         });
     };
     const captureImage = () => {
+
+      let upload = imageCaptured.value
+
       if (imageCaptured.value) {
         initCamera();
+
         imageCaptured.value = false;
         camera_caption.value = "take pricture";
+        upload = imageCaptured.value
       } else {
         camera_caption.value = "reset";
         let video = myVideo.value;
@@ -72,15 +77,21 @@ export default {
         context.drawImage(video, 0, 0, myCanvas.width, myCanvas.height);
         imageCaptured.value = true;
         post.photo = dataURItoBlob(myCanvas.toDataURL());
+        upload = imageCaptured.value
         disableCamera();
-        upload();
+        // upload();
+      }
+      if(upload){
+        context.emit("photoClick", post.photo);
+        //console.log('emitting photoClick')
       }
     };
 
-    const upload= async() => {
-      console.log(post.photo)
-          await upLoadImage(post.photo )
-    };
+    // const upload = async () => {
+    //   console.log(post.photo);
+    //   await upLoadImage(post.photo);
+    //   console.log("image uploaded ", url.value, error.value);
+    // };
 
     // const captureImageFallback = (file) => {
     //   post.photo = file;
@@ -157,6 +168,7 @@ export default {
       canvas,
     };
   },
+  methods: {},
 };
 </script>
 
