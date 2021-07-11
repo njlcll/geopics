@@ -1,6 +1,5 @@
 <template>
   <div class="constrain-more">
-   
     <div class="camera-frame">
       <video v-show="!imageCaptured" ref="video" class="full-width" autoplay />
       <canvas
@@ -12,20 +11,19 @@
     </div>
     <div class="text-center">
       <button v-if="hasCameraSupport" @click="captureImage" size="lg" round>
-        {{camera_caption}}
+        {{ camera_caption }}
       </button>
-
-     
     </div>
   </div>
 </template>
 
 <script>
+ 
+
 export default {
- data() {
+  data() {
     return {
-      
-      camera_caption : "Take Photo",
+      camera_caption: "Take Photo",
       post: {
         id: 1,
         caption: "",
@@ -39,7 +37,6 @@ export default {
     };
   },
   methods: {
-    
     initCamera() {
       navigator.mediaDevices
         .getUserMedia({
@@ -55,11 +52,11 @@ export default {
     },
     captureImage() {
       if (this.imageCaptured) {
-           this.initCamera();
-            this.imageCaptured = false;
-            this.camera_caption = "take pricture"
+        this.initCamera();
+        this.imageCaptured = false;
+        this.camera_caption = "take pricture";
       } else {
-         this.camera_caption = "reset"
+        this.camera_caption = "reset";
         let video = this.$refs.video;
         let canvas = this.$refs.canvas;
         canvas.width = video.getBoundingClientRect().width;
@@ -69,7 +66,11 @@ export default {
         this.imageCaptured = true;
         this.post.photo = this.dataURItoBlob(canvas.toDataURL());
         this.disableCamera();
+        this.uploadImage()
       }
+    },
+    uploadImage() {
+     
     },
     captureImageFallback(file) {
       this.post.photo = file;
@@ -135,7 +136,7 @@ export default {
       this.disableCamera();
     }
   },
-}
+};
 </script>
 
 <style>
