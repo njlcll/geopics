@@ -1,7 +1,12 @@
 <template>
   <div class="constrain-more">
     <div class="camera-frame">
-      <video v-show="!imageCaptured" ref="video" class="full-width" autoplay />
+      <video
+        v-show="!imageCaptured"
+        ref="myVideo"
+        class="full-width"
+        autoplay
+      />
       <canvas
         v-show="imageCaptured"
         ref="canvas"
@@ -18,86 +23,92 @@
 </template>
 
 <script>
- 
-
+import { ref } from "vue";
+import { onMounted, onBeforeUnmount } from "vue";
+import  useStorage from '../composables/useStorage'
 export default {
-  data() {
-    return {
-      camera_caption: "Take Photo",
-      post: {
-        id: 1,
-        caption: "",
-        location: "",
-        photo: null,
-        date: Date.now(),
-      },
-      imageCaptured: false,
-      imageUpload: [],
-      hasCameraSupport: true,
+  setup() {
+    const camera_caption = ref("Take Photo");
+    const post = {
+      id: 1,
+      caption: "",
+      location: "",
+      photo: null,
+      date: Date.now(),
     };
-  },
-  methods: {
-    initCamera() {
+    const imageCaptured = ref(false);
+    //const imageUpload = [];
+    const hasCameraSupport = ref(true);
+    const myVideo = ref(null);
+    const canvas = ref(null);
+
+    const {url, filePath, error, upLoadImage } = useStorage()
+
+    const initCamera = () => {
       navigator.mediaDevices
         .getUserMedia({
           video: true,
         })
         .then((stream) => {
-          this.$refs.video.srcObject = stream;
+          myVideo.value.srcObject = stream;
         })
         .catch((error) => {
-          this.hasCameraSupport = false;
+          hasCameraSupport.value = false;
           console.log("no camera support");
         });
-    },
-    captureImage() {
-      if (this.imageCaptured) {
-        this.initCamera();
-        this.imageCaptured = false;
-        this.camera_caption = "take pricture";
+    };
+    const captureImage = () => {
+      if (imageCaptured.value) {
+        initCamera();
+        imageCaptured.value = false;
+        camera_caption.value = "take pricture";
       } else {
-        this.camera_caption = "reset";
-        let video = this.$refs.video;
-        let canvas = this.$refs.canvas;
-        canvas.width = video.getBoundingClientRect().width;
-        canvas.height = video.getBoundingClientRect().height;
-        let context = canvas.getContext("2d");
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        this.imageCaptured = true;
-        this.post.photo = this.dataURItoBlob(canvas.toDataURL());
-        this.disableCamera();
-        this.uploadImage()
+        camera_caption.value = "reset";
+        let video = myVideo.value;
+        let myCanvas = canvas.value;
+        myCanvas.width = video.getBoundingClientRect().width;
+        myCanvas.height = video.getBoundingClientRect().height;
+        let context = myCanvas.getContext("2d");
+        context.drawImage(video, 0, 0, myCanvas.width, myCanvas.height);
+        imageCaptured.value = true;
+        post.photo = dataURItoBlob(myCanvas.toDataURL());
+        disableCamera();
+        upload();
       }
-    },
-    uploadImage() {
-     
-    },
-    captureImageFallback(file) {
-      this.post.photo = file;
+    };
 
-      let canvas = this.$refs.canvas;
-      let context = canvas.getContext("2d");
+    const upload= async() => {
+      console.log(post.photo)
+          await upLoadImage(post.photo )
+    };
 
-      var reader = new FileReader();
-      reader.onload = (event) => {
-        var img = new Image();
-        img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          context.drawImage(img, 0, 0);
-          this.imageCaptured = true;
-        };
-        img.src = event.target.result;
-      };
-      console.log("file", file);
-      reader.readAsDataURL(file);
-    },
-    disableCamera() {
-      this.$refs.video.srcObject.getVideoTracks().forEach((track) => {
+    // const captureImageFallback = (file) => {
+    //   post.photo = file;
+
+    //   let canvas = $refs.canvas;
+    //   let context = canvas.getContext("2d");
+
+    //   var reader = new FileReader();
+    //   reader.onload = (event) => {
+    //     var img = new Image();
+    //     img.onload = () => {
+    //       canvas.width = img.width;
+    //       canvas.height = img.height;
+    //       context.drawImage(img, 0, 0);
+    //       imageCaptured.value = true;
+    //     };
+    //     img.src = event.target.result;
+    //   };
+    //   console.log("file", file);
+    //   reader.readAsDataURL(file);
+    // };
+
+    const disableCamera = () => {
+      myVideo.value.srcObject.getVideoTracks().forEach((track) => {
         track.stop();
       });
-    },
-    dataURItoBlob(dataURI) {
+    };
+    const dataURItoBlob = (dataURI) => {
       // convert base64 to raw binary data held in a string
       // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
       var byteString = atob(dataURI.split(",")[1]);
@@ -119,22 +130,32 @@ export default {
       // write the ArrayBuffer to a blob, and you're done
       var blob = new Blob([ab], { type: mimeString });
       return blob;
-    },
-  },
-  mounted() {
-    this.initCamera();
-    // navigator.geolocation.getCurrentPosition((position) => {
-    //   this.post.location = position.coords.latitude;
-    //   console.log(position.coords.latitude);
-    // }),
-    //   (err) => {
-    //     console.log(err), { timeout: 7000 };
-    //   };
-  },
-  beforeDestroy() {
-    if (this.hasCameraSupport) {
-      this.disableCamera();
-    }
+    };
+
+    onMounted(() => {
+      initCamera();
+      // navigator.geolocation.getCurrentPosition((position) => {
+      //   this.post.location = position.coords.latitude;
+      //   console.log(position.coords.latitude);
+      // }),
+      //   (err) => {
+      //     console.log(err), { timeout: 7000 };
+      //   };
+    }),
+      onBeforeUnmount(() => {
+        if (hasCameraSupport.value) {
+          disableCamera();
+        }
+      });
+
+    return {
+      camera_caption,
+      imageCaptured,
+      hasCameraSupport,
+      captureImage,
+      myVideo,
+      canvas,
+    };
   },
 };
 </script>
