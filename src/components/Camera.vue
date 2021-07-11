@@ -1,8 +1,4 @@
 <template>
-   <div class="container-fluid">
-
-    
-      <Navbar />
   <div class="constrain-more">
    
     <div class="camera-frame">
@@ -19,46 +15,16 @@
         {{camera_caption}}
       </button>
 
-      <div class="row justify-center q-ma-md">
-        caption<input
-          v-model="post.caption"
-          class="col col-sm-6"
-          label="Caption"
-          dense
-        />
-      </div>
-      <div class="row justify-center q-ma-md">
-        Location
-        <input
-          v-model="locationStr"
-          class="col col-sm-6"
-          label="Location"
-          dense
-        />
-      </div>
-      <div class="row justify-center q-mt-lg">
-        <button color="primary" label="Post Image" rounded unelevated>
-          Save
-        </button>
-      </div>
+     
     </div>
-  </div>
-  <Mapclick @coords='getCoords'></Mapclick>
   </div>
 </template>
 
 <script>
-//import { uid } from 'quasar'
-//require('md-gum-polyfill')
-import Navbar from '../components/Navbar'
-import Mapclick from '../components/MapClick'
-
 export default {
-  name: "Camera",
-  components: { Navbar, Mapclick},
-  data() {
+ data() {
     return {
-      locationStr :"",
+      
       camera_caption : "Take Photo",
       post: {
         id: 1,
@@ -73,10 +39,7 @@ export default {
     };
   },
   methods: {
-    getCoords(e){
-      console.log("coords gotten", e)
-      this.locationStr = `${e.lat} ${e.lng}`
-    },
+    
     initCamera() {
       navigator.mediaDevices
         .getUserMedia({
@@ -172,10 +135,10 @@ export default {
       this.disableCamera();
     }
   },
-};
+}
 </script>
 
-<style >
+<style>
 .camera-frame {
   border: 2px solid;
   border-radius: 10px;
