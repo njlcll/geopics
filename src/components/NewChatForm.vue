@@ -30,7 +30,7 @@ export default {
       }
 
       console.log(user.value)
-       await addDoc(chat)
+       await addDoc(geopics)
        if (!error.value) {
          message.value = ''
        }

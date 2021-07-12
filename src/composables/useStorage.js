@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { projectStorage } from "../firebase/config";
 const useStorage = () => {
-  const error = ref(null);
+  const storageError = ref(false);
   const url = ref(null);
   const filePath = ref(null);
 
@@ -14,11 +14,11 @@ const useStorage = () => {
       url.value = await res.ref.getDownloadURL();
     } catch (err) {
       console.log(err.message);
-      error.value = err.message;
+      storageError.value = err.message;
     }
   };
 
-  return { url, error, upLoadImage };
+  return { url, storageError, upLoadImage };
 };
 
 export default useStorage;

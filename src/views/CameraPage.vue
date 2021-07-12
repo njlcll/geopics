@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <Navbar />
-    <Camera @photoClick="uploadPhoto"></Camera>
+    <Camera @photoClick="getPhoto"></Camera>
     <div class="row justify-center">
       caption
       <input class="col col-sm-6" label="Caption" v-model="caption" />
@@ -30,6 +30,7 @@ import Mapclick from "../components/MapClick";
 import Camera from "../components/Camera";
 import { ref } from "vue";
 import useStorage from "../composables/useStorage";
+import useCollection from "../composables/useCollection";
 
 export default {
   name: "CameraPage",
@@ -44,7 +45,8 @@ export default {
       pic: "",
     };
 
-    const { url, filePath, error, upLoadImage } = useStorage();
+    const { url, storageError, upLoadImage } = useStorage();
+    const { error, addDoc } = useCollection("geopics");
 
     const handleSubmit = () => {};
     const getCoords = (e) => {
@@ -55,18 +57,26 @@ export default {
       console.log(data);
     };
 
-    const savePost = () => {
-      console.log("save post");
+    const getPhoto = (e) => {
+      console.log("getPhoto", e);
+      data.pic = e;
     };
 
-    const uploadPhoto = async (e) => {
-      console.log("upload photo in c page", e);
+    const savePost = async (e) => {
+    
+      await upLoadImage(data.pic );
 
-      await upLoadImage(e);
+      //console.log("image uploaded ", url.value, storageError.value);
 
-      console.log("image uploaded ", url.value, error.value);
+      if (!storageError.value) {
+        data.pic = url.value;
+        console.log("record uploaded ", data.pic);
+      } else {
+        console.log("err", storageError.value);
+      }
+      await addDoc(data);
     };
-    return { locationStr, getCoords, savePost, caption, uploadPhoto };
+    return { locationStr, getCoords, savePost, caption, getPhoto };
   },
 };
 </script>

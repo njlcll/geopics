@@ -83,7 +83,7 @@ export default {
       }
       if(upload){
         context.emit("photoClick", post.photo);
-        //console.log('emitting photoClick')
+        console.log('emitting photoClick')
       }
     };
 
