@@ -1,5 +1,5 @@
 <template>
-  <div class="test">
+  <div class="constrain-more">
      <div v-if="formattedDocuments" ref="messages" class="messages"/>
     <div class="map">
       <section id="map" ref="map"></section>
@@ -113,19 +113,5 @@ export default {
 </script>
 
 <style scoped>
-.map {
-  position: relative;
-  width: 100%;
-  min-width: 100%;
-  min-height: 400px;
-  background-color: red;
-}
 
-#map {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
 </style>

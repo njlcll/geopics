@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Welcome from '../views/Welcome'
+import Home from '../views/Home'
 import Chatroom from '../views/ChatRoom'
+import Login from '../views/Login'
 import CameraPage from '../views/CameraPage'
 import { projectAuth } from '../firebase/config'
 
@@ -9,7 +10,7 @@ const requireAuth = (to, from, next) => {
   let user = projectAuth.currentUser
   console.log('current user in auth guard: ', user)
   if (!user) {
-    next({ name: 'Welcome' })
+    next({ name: 'Login' })
   } else {
     next()
   }
@@ -18,7 +19,7 @@ const requireAuth = (to, from, next) => {
 const requireNoAuth = (to, from, next) => {
   let user = projectAuth.currentUser
   if (user) {
-    next({ name: 'Chatroom' })
+    next({ name: 'CameraPage' })
   } else {
     next()
   }
@@ -27,9 +28,9 @@ const requireNoAuth = (to, from, next) => {
 const routes = [
   {
     path: '/',
-    name: 'Welcome',
-    component: Welcome,
-    beforeEnter: requireNoAuth
+    name: 'Home',
+    component: Home,
+    beforeEnter: requireAuth
   },
   {
     path: '/chatroom',
@@ -41,7 +42,13 @@ const routes = [
     path: '/camera',
     name: 'CameraPage',
     component: CameraPage,
- 
+    beforeEnter: requireAuth
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    beforeEnter: requireNoAuth
   }
 ]
 

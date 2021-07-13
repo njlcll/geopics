@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="">
     <Navbar />
     <NewChatForm />
     <ChatWIndow />

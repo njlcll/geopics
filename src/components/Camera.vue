@@ -1,23 +1,27 @@
 <template>
-  <div class="constrain-more">
-    <div class="camera-frame">
-      <video
-        v-show="!imageCaptured"
-        ref="myVideo"
-        class="full-width"
-        autoplay
-      />
-      <canvas
-        v-show="imageCaptured"
-        ref="canvas"
-        class="full-width"
-        height="240"
-      />
-    </div>
-    <div class="text-center">
-      <button v-if="hasCameraSupport" @click="captureImage" size="lg" round>
-        {{ camera_caption }}
-      </button>
+  <div class="row">
+    <div class="col-12">
+      <div class="constrain-more">
+        <div class="camera-frame">
+          <video
+            v-show="!imageCaptured"
+            ref="myVideo"
+            class="myframe"
+            autoplay
+          />
+          <canvas
+            v-show="imageCaptured"
+            ref="canvas"
+            class="myframe"
+         
+          />
+        </div>
+        <div class="text-center m-3">
+          <button class='btn-dark' v-if="hasCameraSupport" @click="captureImage">
+            {{ camera_caption }}
+          </button >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -42,8 +46,6 @@ export default {
     const myVideo = ref(null);
     const canvas = ref(null);
 
-    
-
     const initCamera = () => {
       navigator.mediaDevices
         .getUserMedia({
@@ -58,15 +60,14 @@ export default {
         });
     };
     const captureImage = () => {
-
-      let upload = imageCaptured.value
+      let upload = imageCaptured.value;
 
       if (imageCaptured.value) {
         initCamera();
 
         imageCaptured.value = false;
         camera_caption.value = "take pricture";
-        upload = imageCaptured.value
+        upload = imageCaptured.value;
       } else {
         camera_caption.value = "reset";
         let video = myVideo.value;
@@ -77,13 +78,13 @@ export default {
         context.drawImage(video, 0, 0, myCanvas.width, myCanvas.height);
         imageCaptured.value = true;
         post.photo = dataURItoBlob(myCanvas.toDataURL());
-        upload = imageCaptured.value
+        upload = imageCaptured.value;
         disableCamera();
         // upload();
       }
-      if(upload){
+      if (upload) {
         context.emit("photoClick", post.photo);
-        console.log('emitting photoClick')
+        console.log("emitting photoClick");
       }
     };
 
@@ -177,13 +178,10 @@ export default {
   border: 2px solid;
   border-radius: 10px;
 }
-.constrain {
+/* .constrain {
   max-width: 975px;
   margin: 0 auto;
-}
+} */
 
-.constrain-more {
-  max-width: 600px;
-  margin: 0 auto;
-}
+
 </style>

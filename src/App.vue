@@ -1,5 +1,5 @@
 <template>
-  <div class="container  text-center mt-5 mb-5">
+  <div class="container-fluid">
  
      
    
