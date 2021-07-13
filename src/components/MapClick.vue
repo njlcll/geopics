@@ -2,7 +2,7 @@
   <div class="constrain-more">
      <div v-if="formattedDocuments" ref="messages" class="messages"/>
     <div class="map">
-      <section id="map" ref="map"></section>
+      <div id="map" ref="map"></div >
     </div>
   </div>
 </template>
