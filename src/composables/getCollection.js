@@ -23,8 +23,9 @@ const getCollection = (collection) => {
      
     });
     
-    // update values
+    
     documents.value = results
+  
     error.value = null
   }, err => {
     console.log(err.message)

@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid">
     <Navbar />
+   
     <Camera @photoClick="getPhoto"></Camera>
     <div class="row justify-center">
       caption
@@ -18,7 +19,7 @@
     <div class="row justify-center q-mt-lg">
       <button color="primary" label="Post Image" @click="savePost">Save</button>
     </div>
-    <Mapclick @coords="getCoords"></Mapclick>
+    <Mapclick @coords="getCoords" :key="componentKey"></Mapclick>
   </div>
 </template>
 
@@ -27,34 +28,37 @@
 //require('md-gum-polyfill')
 import Navbar from "../components/Navbar";
 import Mapclick from "../components/MapClick";
+import TestGet from "../components/TestGet.vue"
 import Camera from "../components/Camera";
 import { ref } from "vue";
+import { timestamp } from '../firebase/config'
 import useStorage from "../composables/useStorage";
 import useCollection from "../composables/useCollection";
 
 export default {
   name: "CameraPage",
-  components: { Navbar, Mapclick, Camera },
+  components: { Navbar, Mapclick, Camera, TestGet },
   setup() {
     const locationStr = ref("");
-
+    const componentKey = ref(0)
     const caption = ref("caption");
     let data = {
       caption: caption.value,
       coords: location,
       pic: "",
+      created_at: timestamp
     };
 
     const { url, storageError, upLoadImage } = useStorage();
     const { error, addDoc } = useCollection("geopics");
 
-    const handleSubmit = () => {};
+  
     const getCoords = (e) => {
       locationStr.value = `${e.lat} ${e.lng}`;
 
       data.coords = e;
       data.caption = caption.value;
-      console.log(data);
+     
     };
 
     const getPhoto = (e) => {
@@ -75,8 +79,10 @@ export default {
         console.log("err", storageError.value);
       }
       await addDoc(data);
+      //forces map reset
+      componentKey.value ++
     };
-    return { locationStr, getCoords, savePost, caption, getPhoto };
+    return { locationStr, getCoords, savePost, caption, getPhoto, componentKey };
   },
 };
 </script>
