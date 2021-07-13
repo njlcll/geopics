@@ -20,8 +20,10 @@ export default {
     const { error, documents } = getCollection('messages')
     // format timestamp
     console.log("docs", documents)
+  
     const formattedDocuments = computed(() => {
       if (documents.value) {
+          
         return documents.value.map(doc => {
           let time = formatDistanceToNow(doc.created_at.toDate())
           return { ...doc, createdAt: time }
