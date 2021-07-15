@@ -1,15 +1,22 @@
 <template>
-  <div class="home" v-if="user">
-    <Navbar />
-    <p>Hey there {{ user.displayName }}</p>
-    <p class="email">Currently logged in as {{ user.email }}</p>
+  <div class="con">
+    <div class="row">
+      <div class="column col-12 text-center">
+        <div class="home" v-if="user">
+          <Navbar />
+          <p>Hey there {{ user.displayName }}</p>
+          <p class="email">Currently logged in as {{ user.email }}</p>
 
-    <button class="btn" @click="handleClick">Logout</button>
-  </div>
-  <div v-else>
-    <div class="text-center mt-3 p-4">
-      <button class="btn" @click="loginClick">Login</button>
+          <button class="btn" @click="handleClick">Logout</button>
+        </div>
+        <div v-else>
+          <div class="text-center mt-3 p-4">
+            <button class="btn" @click="loginClick">Login</button>
+          </div>
+        </div>
+      </div>
     </div>
+ 
   </div>
 </template>
 
@@ -42,6 +49,8 @@ export default {
           console.log("camera ok");
         });
     });
+  
+
     return { handleClick, user, loginClick };
   },
 };
@@ -49,3 +58,7 @@ export default {
 
 <style>
 </style>
+
+
+
+

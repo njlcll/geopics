@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="container  ">
+    <div class="container  big-max">
     <div class="row">
-      <div class="col-sm-4 text-center  ">
+      <div class="col-4 text-center  ">
         <router-link to="/">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@
           </svg>
         </router-link>
       </div>
-      <div class="col-sm-4 text-center">
+      <div class="col-4 text-center">
         <router-link to="/camera">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +40,7 @@
           </svg>
         </router-link>
       </div>
-      <div class="col-sm-4 text-center">
+      <div class="col-4 text-center">
         <router-link to="/pictures">
           <svg
             xmlns="http://www.w3.org/2000/svg"
