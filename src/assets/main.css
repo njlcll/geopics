@@ -20,11 +20,12 @@ body {
 
   .map {
     position: relative;
-    width: 100%;
+   
     min-width: 100%;
-    min-height: 400px;
-    max-height: 400px;
-    background-color: red;
+    min-height: 300px;
+ 
+    max-width: 400px;;
+    background-color :bisque;
   }
   
   #map {
@@ -33,4 +34,16 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
+    display: block;
+    border: 1px solid #ff0; 
   }
+  .camera-frame {
+    border: 2px solid;
+    border-radius: 10px;
+  }
+
+  .pic {
+    width:100%;
+    max-width: 100%;
+    height: 230px;
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="constrain-more">
-     <div v-if="formattedDocuments" ref="messages" class="messages"/>
+   
     <div class="map">
       <div id="map" ref="map"></div >
     </div>
@@ -39,15 +39,7 @@ export default {
     //   console.log("d1", d1.value)
 
     // });
-    const formattedDocuments = computed(() => {
-      if (docs) {
-          
-         return docs.value.forEach(doc => {
-          let time = formatDistanceToNow(doc.created_at.toDate())
-          console.log( "computed", { ...doc, createdAt: time })
-        })
-      }
-    })
+   
     // a
     const getPoints = () => {
       projectFirestore
@@ -107,7 +99,7 @@ export default {
       showMap();
     });
 
-    return { map, documents, formattedDocuments };
+    return { map, documents };
   },
 };
 </script>

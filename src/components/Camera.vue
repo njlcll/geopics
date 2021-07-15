@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12">
       <div class="constrain-more">
-        <div class="camera-frame">
+        <div class="camera-frame mt-3">
           <video
             v-show="!imageCaptured"
             ref="myVideo"
@@ -42,16 +42,18 @@ export default {
     };
     const imageCaptured = ref(false);
     //const imageUpload = [];
-    const hasCameraSupport = ref(true);
+    const hasCameraSupport = ref(false);
     const myVideo = ref(null);
     const canvas = ref(null);
 
     const initCamera = () => {
       navigator.mediaDevices
         .getUserMedia({
-          video: true,
+          
+            video: { facingMode: { ideal: "environment" } }   
         })
         .then((stream) => {
+          hasCameraSupport.value = true
           myVideo.value.srcObject = stream;
         })
         .catch((error) => {
@@ -174,10 +176,7 @@ export default {
 </script>
 
 <style>
-.camera-frame {
-  border: 2px solid;
-  border-radius: 10px;
-}
+
 /* .constrain {
   max-width: 975px;
   margin: 0 auto;

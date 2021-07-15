@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home'
 import Chatroom from '../views/ChatRoom'
+import Pictures from '../views/Pictures'
 import Login from '../views/Login'
 import CameraPage from '../views/CameraPage'
 import { projectAuth } from '../firebase/config'
@@ -36,6 +37,12 @@ const routes = [
     path: '/chatroom',
     name: 'Chatroom',
     component: Chatroom,
+    beforeEnter: requireAuth
+  },
+  {
+    path: '/pictures',
+    name: 'Pictures',
+    component: Pictures,
     beforeEnter: requireAuth
   },
   {

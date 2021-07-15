@@ -1,30 +1,40 @@
 <template>
-  <div class="container-fluid">
+  <div class="">
     <Navbar />
 
     <Camera @photoClick="getPhoto"></Camera>
     <div class="row">
-      <div class="col-12 constrain-more">    
-           <label for="caption" class="form-label">caption</label>
-        <input class="form-control"   id='caption' v-model="caption"  />
+      <div class="col-12 constrain-more">
+        <label for="caption" class="form-label">caption</label>
+        <input class="form-control" id="caption" v-model="caption" />
       </div>
     </div>
 
     <div class="row">
       <div class="col-12 constrain-more">
-         <label for="location" class="form-label">location</label>
-        <input
-          v-model="locationStr"
-          class="form-control"
-       
-          id='location'
-        />
+        <label for="location" class="form-label">location</label>
+        <input v-model="locationStr" class="form-control" id="location" />
       </div>
     </div>
 
     <div class="row">
       <div class="col-12 text-center">
-        <button class='btn-dark m-3' label="Post Image" @click="savePost">Save</button>
+        <button
+          class="btn-dark m-3"
+          id="btnsave"
+          label="Post Image"
+          @click="savePost"
+        >
+          Save
+        </button>
+
+        <div
+          v-if="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
     </div>
     <Mapclick @coords="getCoords" :key="componentKey"></Mapclick>
@@ -57,6 +67,7 @@ export default {
       created_at: timestamp,
     };
 
+    const loading = ref(false);
     const { url, storageError, upLoadImage } = useStorage();
     const { error, addDoc } = useCollection("geopics");
 
@@ -73,7 +84,13 @@ export default {
     };
 
     const savePost = async (e) => {
-      await upLoadImage(data.pic);
+      loading.value = true;
+      url.value = null;
+      storageError.value = false
+
+      if (data.pic) {
+        await upLoadImage(data.pic);
+      }
 
       //console.log("image uploaded ", url.value, storageError.value);
 
@@ -85,6 +102,7 @@ export default {
       }
       await addDoc(data);
       //forces map reset
+      loading.value = false;
       componentKey.value++;
     };
     return {
@@ -94,6 +112,7 @@ export default {
       caption,
       getPhoto,
       componentKey,
+      loading,
     };
   },
 };
