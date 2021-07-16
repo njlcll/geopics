@@ -6,7 +6,7 @@ import 'firebase/auth'
 import 'firebase/storage'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBDmsNxvbyFfLnlkd6zu7dxkhir8k3AVWs",
+    apiKey: "AIzaSyB4I5DBOWCAug2-ZGgeykJTOkx0j2GJ0hQ",
     authDomain: "chat-66c42.firebaseapp.com",
     databaseURL: "https://chat-66c42.firebaseio.com",
     projectId: "chat-66c42",
