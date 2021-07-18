@@ -7,11 +7,13 @@
           <p>Hey there {{ user.displayName }}</p>
           <p class="email">Currently logged in as {{ user.email }}</p>
 
-          <button class="btn" @click="handleClick">Logout</button>
+          <button class="btn btn-primary" @click="handleClick">Logout</button>
+
+          <Group></Group>
         </div>
         <div v-else>
           <div class="text-center mt-3 p-4">
-            <button class="btn" @click="loginClick">Login</button>
+            <button class="btn btn-primary" @click="loginClick">Login</button>
           </div>
         </div>
       </div>
@@ -25,10 +27,11 @@
 import useLogout from "../composables/useLogout";
 import getUser from "../composables/getUser";
 import Navbar from "../components/Navbar.vue";
+import Group from "../components/Group.vue";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 export default {
-  components: { Navbar },
+  components: { Navbar , Group},
   setup() {
     const router = useRouter();
     const { logout, error } = useLogout();

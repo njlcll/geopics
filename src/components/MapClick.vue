@@ -49,7 +49,7 @@ export default {
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
+           // console.log(doc.id, " => ", doc.data());
             //documents.value.push({ ...doc.data(), id: doc.id });
             const x = doc.data().coords.lat;
             const y = doc.data().coords.lng;
@@ -93,11 +93,11 @@ export default {
         (err) => {
           console.log(err), { timeout: 7000 };
         };
-    };
+    }
 
     onMounted(() => {
       showMap();
-    });
+    })
 
     return { map, documents };
   },

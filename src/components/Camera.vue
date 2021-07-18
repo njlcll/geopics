@@ -9,17 +9,16 @@
             class="myframe"
             autoplay
           />
-          <canvas
-            v-show="imageCaptured"
-            ref="canvas"
-            class="myframe"
-         
-          />
+          <canvas v-show="imageCaptured" ref="canvas" class="myframe" />
         </div>
         <div class="text-center m-3">
-          <button class='btn-dark' v-if="hasCameraSupport" @click="captureImage">
+          <button
+            class="btn-dark"
+            v-if="hasCameraSupport"
+            @click="captureImage"
+          >
             {{ camera_caption }}
-          </button >
+          </button>
         </div>
       </div>
     </div>
@@ -49,11 +48,14 @@ export default {
     const initCamera = () => {
       navigator.mediaDevices
         .getUserMedia({
-          
-            video: { facingMode: { ideal: "environment" } }   
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 4096 },
+            height: { ideal: 2160 },
+          },
         })
         .then((stream) => {
-          hasCameraSupport.value = true
+          hasCameraSupport.value = true;
           myVideo.value.srcObject = stream;
         })
         .catch((error) => {
@@ -157,6 +159,7 @@ export default {
       //   };
     }),
       onBeforeUnmount(() => {
+        console.log("onBeforeUnmount");
         if (hasCameraSupport.value) {
           disableCamera();
         }
@@ -176,11 +179,8 @@ export default {
 </script>
 
 <style>
-
 /* .constrain {
   max-width: 975px;
   margin: 0 auto;
 } */
-
-
 </style>
