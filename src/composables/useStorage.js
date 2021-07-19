@@ -6,6 +6,8 @@ const useStorage = () => {
   const filePath = ref(null);
 
   const upLoadImage = async (file) => {
+
+    
     filePath.value = `test/fn/${Date.now()}`;
     const storageRef = projectStorage.ref(filePath.value);
     storageError.value = false
