@@ -54,6 +54,7 @@ import { ref, computed, onBeforeMount } from "vue";
 import getCollection from "../composables/getCollection";
 import useCollection from "../composables/useCollection";
 import { timestamp } from "../firebase/config";
+import {setproject, getProject } from "../composables/localStorage"
 export default {
   setup() {
     let currentActive = "Demo";
@@ -83,11 +84,7 @@ export default {
     };
 
     const onSetup = () => {
-      let group = localStorage.getItem("group");
-      if (!group) {
-        group = "Demo";
-        localStorage.setItem("group", group);
-      }
+      const group = getProject()
       currentActive = group;
       console.log(group);
       //force refresh of formattedDocuments
@@ -103,7 +100,7 @@ export default {
 
     const setActive = (e) => {
       currentActive = e.target.getAttribute("data-li");
-      localStorage.setItem("group", currentActive);
+      setproject(currentActive)
       documents.value[0].clicked = clicked++;
     };
 

@@ -1,15 +1,20 @@
 import { ref } from "vue";
 import { projectStorage } from "../firebase/config";
-const useStorage = () => {
+
+
+const useStorage = (project) => {
   const storageError = ref(false);
   const url = ref(null);
-  const filePath = ref(null);
+ 
 
+  
   const upLoadImage = async (file) => {
 
     
-    filePath.value = `test/fn/${Date.now()}`;
-    const storageRef = projectStorage.ref(filePath.value);
+    const filePath = `test/${project}/${Date.now()}`;
+
+    console.log(filePath)
+    const storageRef = projectStorage.ref(filePath);
     storageError.value = false
 
     try {
