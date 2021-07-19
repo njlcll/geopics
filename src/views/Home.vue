@@ -39,19 +39,25 @@ export default {
 
     const handleClick = async () => {
       await logout();
-    };
+    }
+    
     const loginClick = () => {
       router.push({ name: "Login" });
-    };
+    }
+
     onMounted(() => {
-      navigator.mediaDevices
-        .getUserMedia({
-          video: { facingMode: { ideal: "environment" } },
-        })
-        .then((stream) => {
-          console.log("camera ok");
-        });
-    });
+      // navigator.mediaDevices
+      //   .getUserMedia({
+      //      video: {
+      //       facingMode: { ideal: "environment" },
+      //       width: { ideal: 4096 },
+      //       height: { ideal: 2160 },
+      //     },
+      //   })
+      //   .then((stream) => {
+      //     console.log("camera ok");
+      //   })
+    })
   
 
     return { handleClick, user, loginClick };

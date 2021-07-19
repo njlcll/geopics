@@ -46,6 +46,16 @@ export default {
     const canvas = ref(null);
 
     const initCamera = () => {
+      // navigator.permissions
+      //   .query({ name: "camera" })
+      //   .then((permissionObj) => {
+      //     console.log(permissionObj.state);
+      //     if(ermissionObj.state != 'granted'){}
+      //   })
+      //   .catch((error) => {
+      //     console.log("Got error :", error);
+      //   });
+
       navigator.mediaDevices
         .getUserMedia({
           video: {

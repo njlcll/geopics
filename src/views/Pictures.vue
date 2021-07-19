@@ -12,14 +12,11 @@
 
     <div v-if="error">{{ error }}</div>
 
-  
-
     <div class="row">
-    <div class="col-12 p-3 text-center">
-        <img :src="geoImage" class="img-fluid">
+      <div class="col-12 p-3 text-center">
+        <img :src="geoImage" class="img-fluid" />
+      </div>
     </div>
-</div>
-
   </div>
 </template>
 
@@ -40,7 +37,7 @@ export default {
       () => documents.value,
       (count, prevCount) => {
         documents.value.forEach((doc) => {
-          console.log(doc.coords.lat);
+         // console.log(doc.coords.lat);
 
           const marker = new google.maps.Marker({
             position: { lat: doc.coords.lat, lng: doc.coords.lng },
