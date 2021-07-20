@@ -32,12 +32,12 @@ export default {
     let geoImage = ref("");
     let center = { lat: 57.948786899999995, lng: -5.1613893 };
     let map = ref(null);
-
+    let markers = [];
     watch(
       () => documents.value,
       (count, prevCount) => {
         documents.value.forEach((doc) => {
-         // console.log(doc.coords.lat);
+          // console.log(doc.coords.lat);
 
           const marker = new google.maps.Marker({
             position: { lat: doc.coords.lat, lng: doc.coords.lng },
@@ -52,10 +52,19 @@ export default {
           });
 
           google.maps.event.addListener(marker, "click", function () {
-            marker.info.open(map, marker);
+            marker.info.open(map.value, marker);
             geoImage.value = doc.pic;
+
+           
           });
+          markers.push(marker)
         });
+        console.log(markers)
+         let cluster = new MarkerClusterer(map.value, markers, {
+            maxZoom: 16,
+            imagePath:
+              "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+          });
       }
     );
 

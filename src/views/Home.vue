@@ -4,12 +4,15 @@
       <div class="column col-12 text-center">
         <div class="home" v-if="user">
           <Navbar />
-          <p>Hey there {{ user.displayName }}</p>
-          <p class="email">Currently logged in as {{ user.email }}</p>
-
-          <button class="btn btn-primary" @click="handleClick">Logout</button>
 
           <Group></Group>
+
+          <div class="userscreen border border-dark rounded-2 p-3 mt-2">
+            <!-- <p>Hey there {{ user.displayName }}</p> -->
+            <p class="email">Currently logged in as {{ user.email }}</p>
+
+            <button class="btn btn-primary" @click="handleClick">Logout</button>
+          </div>
         </div>
         <div v-else>
           <div class="text-center mt-3 p-4">
@@ -18,7 +21,6 @@
         </div>
       </div>
     </div>
- 
   </div>
 </template>
 
@@ -31,7 +33,7 @@ import Group from "../components/Group.vue";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 export default {
-  components: { Navbar , Group},
+  components: { Navbar, Group },
   setup() {
     const router = useRouter();
     const { logout, error } = useLogout();
@@ -39,11 +41,11 @@ export default {
 
     const handleClick = async () => {
       await logout();
-    }
-    
+    };
+
     const loginClick = () => {
       router.push({ name: "Login" });
-    }
+    };
 
     onMounted(() => {
       // navigator.mediaDevices
@@ -57,8 +59,7 @@ export default {
       //   .then((stream) => {
       //     console.log("camera ok");
       //   })
-    })
-  
+    });
 
     return { handleClick, user, loginClick };
   },
@@ -66,6 +67,9 @@ export default {
 </script>
 
 <style>
+.userscreen{
+
+}
 </style>
 
 
