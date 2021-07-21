@@ -1,16 +1,24 @@
+import { ref, setBlockTracking } from "vue";
 
 
-const setproject = (group) => {
-  localStorage.setItem("group", group);
-}
+
+const setproject = (project) => {
+  
+  localStorage.setItem("group",project)
+};
 
 const getProject = () => {
-    let group = localStorage.getItem("group");  
-    if (!group) {
-      group = "Demo";
-      setproject(group) ;
-    }
-    return group;
-  };
+  console.log("gettinf local");
 
-  export {setproject, getProject }
+  let project = localStorage.getItem("group");
+  console.log(project, "p")
+
+  if (!project) {   
+    project = "Demo";
+  }
+
+  setproject(project);
+  return project
+};
+
+export { setproject, getProject };

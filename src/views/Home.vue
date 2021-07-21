@@ -1,5 +1,5 @@
 <template>
-  <div class="con">
+  <div class=" big-max">
     <div class="row">
       <div class="column col-12 text-center">
         <div class="home" v-if="user">
@@ -7,9 +7,9 @@
 
           <Group></Group>
 
-          <div class="userscreen border border-dark rounded-2 p-3 mt-2">
+          <div class="fs-5 text border border-dark rounded-2 p-3 mt-2 big-max">
             <!-- <p>Hey there {{ user.displayName }}</p> -->
-            <p class="email">Currently logged in as {{ user.email }}</p>
+            <p class="email">Logged in as {{ user.email }}</p>
 
             <button class="btn btn-primary" @click="handleClick">Logout</button>
           </div>

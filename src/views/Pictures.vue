@@ -28,7 +28,8 @@ import Navbar from "../components/Navbar";
 export default {
   components: { Navbar },
   setup() {
-    const { error, documents } = getCollection("geopics");
+ 
+    const { error, documents } = getCollection("geopics", true);
     let geoImage = ref("");
     let center = { lat: 57.948786899999995, lng: -5.1613893 };
     let map = ref(null);

@@ -1,15 +1,25 @@
 import { ref, watchEffect } from 'vue'
 import { projectFirestore } from '../firebase/config'
+import {getProject } from "./localStorage"
 
-const getCollection = (collection) => {
+const getCollection = (collection, where) => {
 
   const documents = ref(null)
   const error = ref(null)
+  let project = ref(null)
+
+  let collectionRef
+  project.value= getProject()
 
   // register the firestore collection reference
-  let collectionRef = projectFirestore.collection(collection)
+  if(where){
+   collectionRef = projectFirestore.collection(collection)
+    .where('project', '==', project.value)
+  }else{
+     collectionRef = projectFirestore.collection(collection)
     .orderBy('created_at', "desc")
-    
+  }
+
   
   const unsub = collectionRef.onSnapshot(snap => {
   
@@ -34,11 +44,12 @@ const getCollection = (collection) => {
   })
 
   watchEffect((onInvalidate) => {
+    
     // unsub from prev collection when watcher is stopped (component unmounted)
     onInvalidate(() => unsub());
   });
 
-  return { error, documents }
+  return { error, documents, where }
 }
 
-export default getCollection
+export default getCollection 

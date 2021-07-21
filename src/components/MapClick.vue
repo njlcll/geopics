@@ -1,26 +1,66 @@
 <template>
   <div class="constrain-more">
-   
     <div class="map">
-      <div id="map" ref="map"></div >
+      <div id="map" ref="map"></div>
     </div>
   </div>
 </template>
 
 <script>
-import { onMounted,computed } from "@vue/runtime-core";
-import { ref } from "vue";
+import { onMounted, computed } from "@vue/runtime-core";
+import { ref, watch } from "vue";
 import getCollection from "../composables/getCollection";
-import { projectFirestore } from "../firebase/config";
+
 export default {
   setup(props, context) {
-     const { error, docs } = getCollection("messages");
-
-    const documents = ref([]);
+    const { error, documents } = getCollection("geopics", 1);
 
     let center = { lat: 57.948786899999995, lng: -5.1613893 };
     let map = ref(null);
     let marker;
+    let markers = [];
+
+    watch(
+      () => documents.value,
+      (count, prevCount) => {
+        documents.value.forEach((doc) => {
+          // console.log(doc.coords.lat);
+
+          var icon = {
+            path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+            fillColor: "#00FF00",
+            fillOpacity: 0.6,
+            anchor: new google.maps.Point(0, 0),
+            strokeWeight: 0,
+            scale: 0.35,
+          };
+          const photoMarker = new google.maps.Marker({
+            position: { lat: doc.coords.lat, lng: doc.coords.lng },
+            map: map.value,
+            icon
+          });
+
+          photoMarker.info = new google.maps.InfoWindow({
+            content: `<div class = "MarkerPopUp" style="">
+           <div class = "MarkerContext">${doc.caption} dd</div>
+       
+           </div>`,
+          });
+
+          google.maps.event.addListener(photoMarker, "click", function () {
+            photoMarker.info.open(map.value, photoMarker);
+            //geoImage.value = doc.pic;
+          });
+          markers.push(photoMarker);
+        });
+
+        let cluster = new MarkerClusterer(map.value, markers, {
+          maxZoom: 14,
+          imagePath:
+            "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+        });
+      }
+    );
 
     const mapClick = (e) => {
       center.lat = e.latLng.lat();
@@ -31,6 +71,7 @@ export default {
       marker = new google.maps.Marker({
         position: { lat: center.lat, lng: center.lng },
         map: map.value,
+      
       });
       context.emit("coords", { lat: center.lat, lng: center.lng });
     };
@@ -39,39 +80,39 @@ export default {
     //   console.log("d1", d1.value)
 
     // });
-   
+
     // a
-    const getPoints = () => {
-      projectFirestore
-        .collection("geopics")
-        .orderBy("created_at", "desc")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-           // console.log(doc.id, " => ", doc.data());
-            //documents.value.push({ ...doc.data(), id: doc.id });
-            const x = doc.data().coords.lat;
-            const y = doc.data().coords.lng;
-            var icon = {
-              path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-              fillColor: "#FF0000",
-              fillOpacity: 0.6,
-              anchor: new google.maps.Point(0, 0),
-              strokeWeight: 0,
-              scale: 0.5,
-            };
-            new google.maps.Marker({
-              position: { lat: x, lng: y },
-              map: map.value,
-              icon,
-            });
-          });
-        })
-        .catch((error) => {
-          console.log("Error getting documents: ", error);
-        })
-    }
+    // const getPoints = () => {
+    //   projectFirestore
+    //     .collection("geopics")
+    //     .orderBy("created_at", "desc")
+    //     .get()
+    //     .then((querySnapshot) => {
+    //       querySnapshot.forEach((doc) => {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         // console.log(doc.id, " => ", doc.data());
+    //         //documents.value.push({ ...doc.data(), id: doc.id });
+    //         const x = doc.data().coords.lat;
+    //         const y = doc.data().coords.lng;
+    //         var icon = {
+    //           path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+    //           fillColor: "#FF0000",
+    //           fillOpacity: 0.6,
+    //           anchor: new google.maps.Point(0, 0),
+    //           strokeWeight: 0,
+    //           scale: 0.5,
+    //         };
+    //         new google.maps.Marker({
+    //           position: { lat: x, lng: y },
+    //           map: map.value,
+    //           icon,
+    //         });
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       console.log("Error getting documents: ", error);
+    //     });
+    // };
     const showMap = (latitude, longitude) => {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position.coords.latitude, position.coords.longitude);
@@ -86,18 +127,18 @@ export default {
           position: { lat: center.lat, lng: center.lng },
           map: map.value,
         });
-        getPoints();
+        //getPoints();
         context.emit("coords", { lat: center.lat, lng: center.lng });
         google.maps.event.addListener(map.value, "click", mapClick);
       }),
         (err) => {
           console.log(err), { timeout: 7000 };
         };
-    }
+    };
 
     onMounted(() => {
       showMap();
-    })
+    });
 
     return { map, documents };
   },
@@ -105,5 +146,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

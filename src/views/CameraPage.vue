@@ -3,17 +3,19 @@
     <Navbar />
 
     <Camera @photoClick="getPhoto"></Camera>
-    <div class="row">
-      <div class="col-12 constrain-more">
-        <label for="caption" class="form-label">caption</label>
-        <input class="form-control" id="caption" v-model="caption" />
-      </div>
-    </div>
 
     <div class="row">
+      <div class="col-6 ">project : {{ project }}</div>
+      <div class="col-6 text-end ">{{ locationStr }}</div>
+    </div>
+    <div class="row">
       <div class="col-12 constrain-more">
-        <label for="location" class="form-label">location</label>
-        <input v-model="locationStr" class="form-control" id="location" />
+        <input
+          class="form-control"
+          id="caption"
+          v-model="caption"
+          placeholder="add caption"
+        />
       </div>
     </div>
 
@@ -53,7 +55,8 @@ import { ref } from "vue";
 import { timestamp } from "../firebase/config";
 import useStorage from "../composables/useStorage";
 import useCollection from "../composables/useCollection";
-import {getProject} from "../composables/localStorage"
+import { getProject } from "../composables/localStorage";
+
 export default {
   name: "CameraPage",
   components: { Navbar, Mapclick, Camera, TestGet },
@@ -61,27 +64,31 @@ export default {
     const locationStr = ref("");
     const componentKey = ref(0);
     const caption = ref("");
+    let project = ref(null);
     let data = {
       caption: caption.value,
       coords: location,
       pic: "",
+      project: "Demo",
       created_at: timestamp,
     };
-    
+    project = getProject();
+
     const loading = ref(false);
-    const { url, storageError, upLoadImage } = useStorage(getProject());
+    const { url, storageError, upLoadImage } = useStorage(project.value);
     const { error, addDoc } = useCollection("geopics");
 
     const getCoords = (e) => {
-      locationStr.value = `${e.lat} ${e.lng}`;
-      console.log(e)
-//
+      locationStr.value = `${Math.round(e.lat * 100000) / 1000000},${
+        Math.round(e.lng * 100000) / 100000
+      }`;
+      console.log(e);
+      //
       const slightOffset = {
-        lat : e.lat + (Math.random() / 10000),
-        lng : e.lng + (Math.random() / 10000)
-      }
+        lat: e.lat + Math.random() / 10000,
+        lng: e.lng + Math.random() / 10000,
+      };
       data.coords = slightOffset;
-    
     };
 
     const getPhoto = (e) => {
@@ -90,11 +97,9 @@ export default {
     };
 
     const savePost = async (e) => {
-
-      
       loading.value = true;
       url.value = null;
-      storageError.value = false
+      storageError.value = false;
 
       if (data.pic) {
         await upLoadImage(data.pic);
@@ -109,9 +114,9 @@ export default {
         console.log("err", storageError.value);
       }
 
-      data.caption = caption.value
+      data.caption = caption.value;
+      data.project = project.value;
 
-    
       await addDoc(data);
       //forces map reset
       loading.value = false;
@@ -125,6 +130,7 @@ export default {
       getPhoto,
       componentKey,
       loading,
+      project,
     };
   },
 };

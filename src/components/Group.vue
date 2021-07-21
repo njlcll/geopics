@@ -1,5 +1,5 @@
 <template>
-  <div id="group" class="container-fluid">
+  <div id="group" class=" ">
     <h4 class="d-flex justify-content-center mt-4">Current Projects</h4>
 
     <div
@@ -32,8 +32,8 @@
         ></span>
       </button>
     </div>
-    <div class="form mt-3">
-      <div class="mt-3">
+    <div class="form mt-3 text border border-dark rounded-2 p-3 mt-2">
+      <div class="mt-3 ">
         <label for="group" class="form-label">Add Group</label>
         <input
           type="text"
@@ -59,8 +59,12 @@ export default {
   setup() {
     let currentActive = "Demo";
     let clicked = 0;
-    const newProject = ref("");
+    let newProject = ref("");
 
+ 
+    currentActive = getProject()
+
+    console.log(currentActive , "is q")
     const { error, documents } = getCollection("geoprojects")
     const { addError, addDoc } = useCollection("geoprojects")
 
@@ -83,17 +87,7 @@ export default {
       }
     };
 
-    const onSetup = () => {
-      const group = getProject()
-      currentActive = group;
-      console.log(group);
-      //force refresh of formattedDocuments
-      //documents.value[0].clicked = clicked++;
-    };
-
-    onSetup();
-
-    
+       
     const active = (name) => {
       return name == currentActive;
     };
