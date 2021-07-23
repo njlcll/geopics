@@ -77,44 +77,7 @@ export default {
       context.emit("coords", { lat: center.lat, lng: center.lng });
     };
 
-    // watch(documents.value, (d1, dw) => {
-    //   console.log("d1", d1.value)
-
-    // });
-
-    // a
-    // const getPoints = () => {
-    //   projectFirestore
-    //     .collection("geopics")
-    //     .orderBy("created_at", "desc")
-    //     .get()
-    //     .then((querySnapshot) => {
-    //       querySnapshot.forEach((doc) => {
-    //         // doc.data() is never undefined for query doc snapshots
-    //         // console.log(doc.id, " => ", doc.data());
-    //         //documents.value.push({ ...doc.data(), id: doc.id });
-    //         const x = doc.data().coords.lat;
-    //         const y = doc.data().coords.lng;
-    //         var icon = {
-    //           path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-    //           fillColor: "#FF0000",
-    //           fillOpacity: 0.6,
-    //           anchor: new google.maps.Point(0, 0),
-    //           strokeWeight: 0,
-    //           scale: 0.5,
-    //         };
-    //         new google.maps.Marker({
-    //           position: { lat: x, lng: y },
-    //           map: map.value,
-    //           icon,
-    //         });
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       console.log("Error getting documents: ", error);
-    //     });
-    // };
-    const showMap = (latitude, longitude) => {
+    const showMap = () => {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position.coords.latitude, position.coords.longitude);
         center.lat = position.coords.latitude;
