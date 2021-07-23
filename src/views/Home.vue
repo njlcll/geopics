@@ -2,7 +2,7 @@
   <div class=" big-max">
     <div class="row">
       <div class="column col-12 text-center">
-        <div class="home" v-if="user">
+        <div class="home col-12 " v-if="user">
           <Navbar />
 
           <Group></Group>
@@ -14,7 +14,7 @@
             <button class="btn btn-primary" @click="handleClick">Logout</button>
           </div>
         </div>
-        <div v-else>
+        <div v-else col-12 >
           <div class="text-center mt-3 p-4">
             <button class="btn btn-primary" @click="loginClick">Login</button>
           </div>

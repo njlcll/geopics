@@ -5,10 +5,11 @@
     <Camera @photoClick="getPhoto"></Camera>
 
     <div class="row">
-      <div class="col-6 ">project : {{ project }}</div>
-      <div class="col-6 text-end ">{{ locationStr }}</div>
+      <div class="col-6">project : {{ project }}</div>
+      <div class="col-6 text-end">mode : {{modeStr}} {{ locationStr }}</div>
     </div>
     <div class="row">
+    
       <div class="col-12 constrain-more">
         <input
           class="form-control"
@@ -20,9 +21,11 @@
     </div>
 
     <div class="row">
-      <div class="col-12 text-center">
+      <div class="col-12 text-center ">
         <button
+       
           class="btn-dark m-3"
+      
           id="btnsave"
           label="Post Image"
           @click="savePost"
@@ -39,7 +42,7 @@
         </div>
       </div>
     </div>
-    <Mapclick @coords="getCoords" :key="componentKey"></Mapclick>
+    <Mapclick @coords="getCoords"></Mapclick>
   </div>
 </template>
 
@@ -55,6 +58,7 @@ import { ref } from "vue";
 import { timestamp } from "../firebase/config";
 import useStorage from "../composables/useStorage";
 import useCollection from "../composables/useCollection";
+import { projectAuth } from "../firebase/config";
 import { getProject } from "../composables/localStorage";
 
 export default {
@@ -65,17 +69,19 @@ export default {
     const componentKey = ref(0);
     const caption = ref("");
     let project = ref(null);
+    const  modeStr = ref("Cur Loc.")
     let data = {
       caption: caption.value,
       coords: location,
       pic: "",
       project: "Demo",
+
       created_at: timestamp,
     };
     project = getProject();
 
     const loading = ref(false);
-    const { url, storageError, upLoadImage } = useStorage(project.value);
+    const { url, storageError, upLoadImage } = useStorage(project);
     const { error, addDoc } = useCollection("geopics");
 
     const getCoords = (e) => {
@@ -84,6 +90,7 @@ export default {
       }`;
       console.log(e);
       //
+      modeStr.value = "Map Click"
       const slightOffset = {
         lat: e.lat + Math.random() / 10000,
         lng: e.lng + Math.random() / 10000,
@@ -92,7 +99,8 @@ export default {
     };
 
     const getPhoto = (e) => {
-      console.log("getPhoto", e);
+      
+ 
       data.pic = e;
     };
 
@@ -115,12 +123,14 @@ export default {
       }
 
       data.caption = caption.value;
-      data.project = project.value;
+      data.project = project;
+      const user = projectAuth.currentUser;
+      data.user = user.uid;
 
       await addDoc(data);
-      //forces map reset
+
       loading.value = false;
-      componentKey.value++;
+      // componentKey.value++;
     };
     return {
       locationStr,
@@ -131,6 +141,7 @@ export default {
       componentKey,
       loading,
       project,
+      modeStr
     };
   },
 };

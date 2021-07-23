@@ -37,6 +37,7 @@ export default {
     watch(
       () => documents.value,
       (count, prevCount) => {
+        markers = []
         documents.value.forEach((doc) => {
           // console.log(doc.coords.lat);
 

@@ -11,7 +11,7 @@ const useCollection = (collection) => {
 
   const addDoc = async (doc) => {
     error.value = null
-
+    console.log("adding ", doc)
     try {
       await projectFirestore.collection(collection).add(doc)
     }

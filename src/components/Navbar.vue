@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container  big-max">
-    <div class="row">
+    <div class="row p-3">
       <div class="col-4 text-center  ">
         <router-link to="/">
           <svg

@@ -23,6 +23,7 @@ export default {
     watch(
       () => documents.value,
       (count, prevCount) => {
+        markers = []
         documents.value.forEach((doc) => {
           // console.log(doc.coords.lat);
 
@@ -128,7 +129,7 @@ export default {
           map: map.value,
         });
         //getPoints();
-        context.emit("coords", { lat: center.lat, lng: center.lng });
+      //  context.emit("coords", { lat: center.lat, lng: center.lng });
         google.maps.event.addListener(map.value, "click", mapClick);
       }),
         (err) => {
