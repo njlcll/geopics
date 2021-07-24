@@ -80,7 +80,7 @@ export default {
   components: { Navbar, Mapclick, Camera, TestGet },
   setup() {
     const locationStr = ref("");
-    const componentKey = ref(0);
+ 
     const caption = ref("");
     let project = ref(null);
     const modeStr = ref("Cur Loc.");
@@ -174,7 +174,7 @@ export default {
       await addDoc(data);
 
       loading.value = false;
-      // componentKey.value++;
+  
     };
 
     startGeoTracking();
@@ -184,7 +184,7 @@ export default {
       savePost,
       caption,
       getPhoto,
-      componentKey,
+   
       loading,
       project,
       modeStr,
