@@ -169,7 +169,7 @@ export default {
       //   };
     }),
       onBeforeUnmount(() => {
-        console.log("onBeforeUnmount");
+        console.log("onBeforeUnmount disableCamera");
         if (hasCameraSupport.value) {
           disableCamera();
         }

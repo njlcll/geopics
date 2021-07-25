@@ -16,14 +16,14 @@
       </svg>
     </span>
     <div class="map">
-      <div id="map" ref="map"></div>
+      <div id="map"></div>
     </div>
   </div>
 </template>
 
 <script>
-import { onMounted, computed } from "@vue/runtime-core";
-import { ref, watch } from "vue";
+import { onMounted, computed, onUnmounted } from "@vue/runtime-core";
+import { ref, watch, watchEffect } from "vue";
 import getCollection from "../composables/getCollection";
 
 export default {
@@ -37,8 +37,7 @@ export default {
     const modeStr = ref(null);
 
     let navId = null;
-
-    
+    let firstPointFound = false
 
     const myCurrentPos = (pos) => {
       console.log("getting coords", pos.coords.latitude);
@@ -49,7 +48,7 @@ export default {
         position: { lat: pos.coords.latitude, lng: pos.coords.longitude },
         map: map.value,
       });
-      context.emit("coords pos", {
+      context.emit("coords", {
         mode: "current",
         lat: pos.coords.latitude,
         lng: pos.coords.longitude,
@@ -75,15 +74,13 @@ export default {
     };
 
     const setCurrentLoc = () => {
-      
       if (navId == null) {
-        console.log('setCurrentLoc', navId)
         startGeoTracking();
         modeStr.value = "Cur Loc.";
       }
     };
-    const getCoords = (e) => {
-      
+
+    const getTTTTTTTCoords = (e) => {
       modeStr.value = "Map Click";
       // const slightOffset = {
       //   lat: e.lat + Math.random() / 10000,
@@ -93,48 +90,54 @@ export default {
     };
 
     startGeoTracking();
-    watch(
-      () => documents.value,
-      (count, prevCount) => {
-        markers = [];
-        documents.value.forEach((doc) => {
-          // console.log(doc.coords.lat);
+    watchEffect(() => {
+      console.log("watchEffect");
+      if (!map.value || !documents.value) {
+        return;
+      }
+      markers = [];
+      documents.value.forEach((doc) => {
+        var icon = {
+          path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+          fillColor: "#00FF00",
+          fillOpacity: 0.6,
+          anchor: new google.maps.Point(0, 0),
+          strokeWeight: 0,
+          scale: 0.35,
+        };
 
-          var icon = {
-            path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-            fillColor: "#00FF00",
-            fillOpacity: 0.6,
-            anchor: new google.maps.Point(0, 0),
-            strokeWeight: 0,
-            scale: 0.35,
-          };
-          const photoMarker = new google.maps.Marker({
-            position: { lat: doc.coords.lat, lng: doc.coords.lng },
-            map: map.value,
-            icon,
-          });
+        if (!firstPointFound) {
+          firstPointFound = true;
+          const center = new google.maps.LatLng(doc.coords.lat, doc.coords.lng);
+          // using global variable:
+          map.value.panTo(center);
+        }
+        const photoMarker = new google.maps.Marker({
+          position: { lat: doc.coords.lat, lng: doc.coords.lng },
+          map: map.value,
+          icon,
+        });
 
-          photoMarker.info = new google.maps.InfoWindow({
-            content: `<div class = "MarkerPopUp" style="">
+        photoMarker.info = new google.maps.InfoWindow({
+          content: `<div class = "MarkerPopUp" style="">
            <div class = "MarkerContext">${doc.caption} dd</div>
        
            </div>`,
-          });
-
-          google.maps.event.addListener(photoMarker, "click", function () {
-            photoMarker.info.open(map.value, photoMarker);
-            //geoImage.value = doc.pic;
-          });
-          markers.push(photoMarker);
         });
 
-        let cluster = new MarkerClusterer(map.value, markers, {
-          maxZoom: 14,
-          imagePath:
-            "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+        google.maps.event.addListener(photoMarker, "click", function () {
+          photoMarker.info.open(map.value, photoMarker);
+          //geoImage.value = doc.pic;
         });
-      }
-    );
+        markers.push(photoMarker);
+      });
+
+      let cluster = new MarkerClusterer(map.value, markers, {
+        maxZoom: 16,
+        imagePath:
+          "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+      });
+    });
 
     const mapClick = (e) => {
       center.lat = e.latLng.lat();
@@ -184,6 +187,10 @@ export default {
       showMap();
     });
 
+    onUnmounted(() => {
+      navigator.geolocation.clearWatch(navId);
+      navId = null;
+    });
     return { map, documents, modeStr, setCurrentLoc };
   },
 };
