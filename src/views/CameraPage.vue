@@ -85,7 +85,7 @@ export default {
     const { error, addDoc } = useCollection("geopics");
 
     const getCoords = (e)=>{
-        console.log("coords emit", e)
+        //console.log("coords emit", e)
         if(e.mode == "current"){
           modeStr.value = "Curr Loc."
         }

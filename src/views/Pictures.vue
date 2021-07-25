@@ -20,7 +20,7 @@
 
 <script>
 import getCollection from "../composables/getCollection";
-import { computed, watchEffect, onMounted, ref } from "vue";
+import { computed, watch, onMounted, ref } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import Navbar from "../components/Navbar";
 export default {
@@ -28,50 +28,62 @@ export default {
   setup() {
     const { error, documents } = getCollection("geopics", true);
     let geoImage = ref("");
-    let center = { lat: 57.948786899999995, lng: -5.1613893 };
+    let center = { lat: 57.948786899999995, lng: -4.1613893 };
     let map = ref(null);
     let markers = [];
     let intTimer = null;
     let firstPointFound = false;
 
-    watchEffect(() => {
-      if (!map.value || !documents.value) {
-        return;
-      }
-      markers = [];
-      documents.value.forEach((doc) => {
-        // console.log(doc.coords.lat);
+    watch(
+      () => documents.value,
+      (state, prevState) => {
+        // if (!documents.value) {
+        //   return;
+        // }
+        console.log('watch')
+        markers = [];
+        documents.value.forEach((doc) => {
+          // console.log(doc.coords.lat);
 
-        if (!firstPointFound) {
-          firstPointFound = true;
-          const center = new google.maps.LatLng(doc.coords.lat, doc.coords.lng );
-          // using global variable:
-          map.value.panTo(center);
-        }
-        const marker = new google.maps.Marker({
-          position: { lat: doc.coords.lat, lng: doc.coords.lng },
-          map: map.value,
-        });
+           let slightOffset = {
+            lat: doc.coords.lat + Math.random() / 5000,
+            lng: doc.coords.lng + Math.random() / 5000,
+          };
 
-        marker.info = new google.maps.InfoWindow({
-          content: `<div class = "MarkerPopUp" style="">
+          if (!firstPointFound) {
+            firstPointFound = true;
+            const center = new google.maps.LatLng(
+               slightOffset.lat,
+              slightOffset.lng
+            );
+            // using global variable:
+            map.value.panTo(center);
+          }
+          const marker = new google.maps.Marker({
+            position: { lat: slightOffset.lat, lng: slightOffset.lng },
+            map: map.value,
+          });
+
+          marker.info = new google.maps.InfoWindow({
+            content: `<div class = "MarkerPopUp" style="">
            <div class = "MarkerContext">${doc.caption}</div>
        
            </div>`,
-        });
+          });
 
-        google.maps.event.addListener(marker, "click", function () {
-          marker.info.open(map.value, marker);
-          geoImage.value = doc.pic;
+          google.maps.event.addListener(marker, "click", function () {
+            marker.info.open(map.value, marker);
+            geoImage.value = doc.pic;
+          });
+          markers.push(marker);
         });
-        markers.push(marker);
-      });
-      let cluster = new MarkerClusterer(map.value, markers, {
-        maxZoom: 14,
-        imagePath:
-          "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-      });
-    });
+        let cluster = new MarkerClusterer(map.value, markers, {
+          maxZoom: 14,
+          imagePath:
+            "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+        });
+      }
+    );
 
     const showMap = (latitude, longitude) => {
       navigator.geolocation.getCurrentPosition((position) => {
