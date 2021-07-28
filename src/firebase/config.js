@@ -5,13 +5,13 @@ import 'firebase/firestore';
 import 'firebase/storage'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB4I5DBOWCAug2-ZGgeykJTOkx0j2GJ0hQ",
+    apiKey: "",
     authDomain: "chat-66c42.firebaseapp.com",
     databaseURL: "https://chat-66c42.firebaseio.com",
     projectId: "chat-66c42",
     storageBucket: "chat-66c42.appspot.com",
     messagingSenderId: "591166683363",
-    appId: "1:591166683363:web:c143171e2b46339663edd6"
+    appId: ""
   };
 
   //init app
