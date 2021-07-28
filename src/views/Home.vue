@@ -2,6 +2,7 @@
   <div class=" big-max">
     <div class="row">
       <div class="column col-12 text-center">
+        <i class="bi bi-alarm"></i>
         <div class="home col-12 " v-if="user">
           <Navbar />
 
